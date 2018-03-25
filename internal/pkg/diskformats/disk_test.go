@@ -36,3 +36,11 @@ func TestGeometrySize(t *testing.T) {
 		}
 	}
 }
+
+func TestFiveQuarterDisk(t *testing.T) {
+	s := FiveQuarterDisk().Size()
+	expect := 143360
+	if s != expect {
+		t.Errorf("FiveQuartedDisk: size want %v, got %v", expect, s)
+	}
+}
