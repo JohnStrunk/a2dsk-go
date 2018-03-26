@@ -2,3 +2,4 @@
 *.test
 
 /a2dsk-go
+/coverage.txt
