@@ -1,5 +1,7 @@
 sudo: false
 language: go
+go:
+- stable
 
 before_install:
 - go get -u golang.org/x/lint/golint
