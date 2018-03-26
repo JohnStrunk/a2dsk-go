@@ -2,7 +2,9 @@ sudo: false
 language: go
 
 before_install:
-- go get github.com/mattn/goveralls
+- go get -u golang.org/x/lint/golint
+- go get -u github.com/mattn/goveralls
 
 script:
+- make all
 - $GOPATH/bin/goveralls -service=travis-ci
