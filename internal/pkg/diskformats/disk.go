@@ -2,11 +2,20 @@
 // image formats.
 package diskformats
 
-// Track represents a track number on a disk, typically [0, tmax-1]
-type Track int
+// Block represents a block number on a disk
+type Block int
 
 // Sector represents a sector number on a track, typically [0, smax-1]
 type Sector int
+
+// Track represents a track number on a disk, typically [0, tmax-1]
+type Track int
+
+// BlockSize is the size of a block, in bytes
+const BlockSize = 512
+
+// BlockData is the contents read/written to a disk block
+type BlockData []byte
 
 // SectorSize is the size of a sector, in bytes
 const SectorSize = 256
@@ -25,12 +34,18 @@ func FiveQuarterDisk() Geometry {
 	return Geometry{Sectors: 16, Tracks: 35}
 }
 
-// SectoredDisk is the common interface to the emulator formats that treat the
-// underlying media as cooked sectors.
-type SectoredDisk interface {
-	read(t Track, s Sector, d SectorData) error
-	write(t Track, s Sector, d SectorData) error
-	close() error
+// SectorDisk is the common interface to the emulator formats that treat the
+// underlying media as sectors (ala DOS3.3).
+type SectorDisk interface {
+	Read(s Sector, d []byte) error
+	Write(s Sector, d []byte) error
+}
+
+// ProdosDisk is the common interface to emulator formats that can access data
+// as ProDOS blocks
+type ProdosDisk interface {
+	Read(b Block, d []byte) error
+	Write(b Block, d []byte) error
 }
 
 // SectorCount returns the total number of sectors in a Geometry
