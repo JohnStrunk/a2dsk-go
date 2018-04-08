@@ -50,6 +50,14 @@ func TestDoDiskReadErrors(t *testing.T) {
 	if rv == nil {
 		t.Errorf("DoDisk.Read: failed seek should return error")
 	}
+
+	r.Err = nil
+	r.Bytes = 5 // Short read
+	d = NewDoDisk(r)
+	rv = d.Read(3, data)
+	if rv == nil {
+		t.Errorf("DoDisk.Read: failed short read should return error")
+	}
 }
 
 func TestDoDiskWriteInvalidBuffer(t *testing.T) {
