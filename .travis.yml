@@ -1,12 +1,44 @@
+---
 sudo: false
-language: go
-go:
-- stable
+matrix:
+  include:
+    # markdownlint: https://github.com/markdownlint/markdownlint
+    # https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md
+    - name: markdownlint
+      language: ruby
+      install:
+        - gem install mdl
+      script:
+        - >
+          find . -regextype egrep -iregex '.*\.md' -print0 |
+            xargs -0rt mdl
 
-before_install:
-- go get -u golang.org/x/lint/golint
-- go get -u github.com/mattn/goveralls
+    # shellcheck
+    - name: shellcheck
+      language: bash
+      script:
+        - >
+          find . -regextype egrep -iregex '.*\.(ba)?sh' -print0 |
+            xargs -0rt shellcheck
 
-script:
-- make all
-- $GOPATH/bin/goveralls -service=travis-ci
+    # yamllint
+    - name: yamllint
+      language: python
+      install:
+        - pip install yamllint
+      script:
+        - >
+          find . -regextype egrep -iregex '.*\.ya?ml' -print0 |
+            xargs -0rt yamllint
+
+    # Run golang tests
+    - name: Unit tests
+      language: go
+      go:
+        - stable
+      install:
+        - go get -u golang.org/x/lint/golint
+        - go get -u github.com/mattn/goveralls
+      script:
+        - make all
+        - $GOPATH/bin/goveralls -service=travis-ci
